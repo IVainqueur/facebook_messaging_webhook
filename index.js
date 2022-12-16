@@ -7,6 +7,17 @@ const app = express()
 require('dotenv').config()
 app.use(cors())
 app.use(express.json({}))
+app.use(express.urlencoded({ extended: true }))
+app.use((req, res, next) => {
+    console.log('[request]', {
+        method: req.method,
+        body: req.body,
+        query: req.query,
+        route: req.path,
+    })
+    next();
+})
+
 app.post('/webhook', (req, res) => {
     console.log('[webhook]', req.body);
     io.sockets.emit('serverEvent', { requestBody: req.body })
